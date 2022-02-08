@@ -1,14 +1,6 @@
 import { ILoadFacebookUserApi, LoadFacebookUserApi } from '@/datalayer/contracts/apis'
+import { FacebookAuthentcationUseCase } from '@/datalayer/use-cases'
 import { AuthenticationError } from '@/domain/errors'
-import { FacebookAuthentication } from '@/domain/use-cases'
-
-class FacebookAuthentcationUseCase {
-    constructor(private readonly loadFacebookUserApi: ILoadFacebookUserApi) { }
-    async perform(params: FacebookAuthentication.Params): Promise<AuthenticationError> {
-        await this.loadFacebookUserApi.loadUser(params)
-        return new AuthenticationError()
-    }
-}
 
 class LoadFacebookUserApiSpy implements ILoadFacebookUserApi {
     token?: string
