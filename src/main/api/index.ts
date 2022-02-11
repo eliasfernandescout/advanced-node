@@ -1,4 +1,4 @@
-import '../config/module-alias'
+import '../configs/module-alias'
 class Person {
   speak (name?: string): string {
     return `Olá ${name?.toUpperCase() ?? 'Fulano'}!!!`
