@@ -1,4 +1,4 @@
-import { ILoadFacebookUserApi } from '@/datalayer/contracts/apis'
+import { ILoadFacebookUserApi } from '@/data/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/use-cases'
 
