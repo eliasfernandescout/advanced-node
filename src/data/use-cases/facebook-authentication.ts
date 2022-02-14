@@ -3,6 +3,9 @@ import { ILoadUserAccountRepository, ICreateFacebookAccountRepository, IUpdateFa
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/use-cases'
 
+// #################################################################################
+// INTERSECTION TYPES
+// -------> OUTRO METODO DE ESCREVER O CODIGO ACIMA
 export class FacebookAuthentcationUseCase {
   constructor(
     private readonly facebookApi: ILoadFacebookUserApi,
@@ -18,7 +21,7 @@ export class FacebookAuthentcationUseCase {
       if (accountData?.name !== undefined) {
         await this.userAccountRepository.updateWithFacebook({
           id: accountData.id,
-          name: accountData.name,
+          name: accountData.name ?? facebookData.name,
           facebookId: facebookData.facebookId
         })
       } else {
@@ -56,7 +59,3 @@ export class FacebookAuthentcationUseCase {
 //     return new AuthenticationError()
 //   }
 // }
-
-// #################################################################################
-// INTERSECTION TYPES
-// -------> OUTRO METODO DE ESCREVER O CODIGO ACIMA
