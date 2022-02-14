@@ -11,5 +11,6 @@ export namespace LoadFacebookUserApi {
     facebookId: string
     email: string
     name: string
+
   }
 }
