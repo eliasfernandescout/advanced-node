@@ -13,12 +13,13 @@ export namespace NLoadUserAccountRepository {
   }
 }
 // ----------------------------------------------------------------------------------------
-export interface ICreateFacebookAccountRepository {
-  createFromFacebook: (params: NCreateFacebookAccountRepository.Params) => Promise<void>
+export interface ISaveFacebookAccountRepository {
+  saveWithFacebook: (params: NSaveFacebookAccountRepository.Params) => Promise<void>
 
 }
-export namespace NCreateFacebookAccountRepository {
+export namespace NSaveFacebookAccountRepository {
   export type Params = {
+    id?: string
     email: string
     name: string
     facebookId: string
@@ -26,14 +27,14 @@ export namespace NCreateFacebookAccountRepository {
 }
 
 // ----------------------------------------------------------------------------------------
-export interface IUpdateFacebookAccountRepository {
-  updateWithFacebook: (params: NUpdateFacebookAccountRepository.Params) => Promise<void>
+// export interface IUpdateFacebookAccountRepository {
+//   updateWithFacebook: (params: NUpdateFacebookAccountRepository.Params) => Promise<void>
 
-}
-export namespace NUpdateFacebookAccountRepository {
-  export type Params = {
-    id: string
-    name: string
-    facebookId: string
-  }
-}
+// }
+// export namespace NUpdateFacebookAccountRepository {
+//   export type Params = {
+//     id: string
+//     name: string
+//     facebookId: string
+//   }
+// }

@@ -1,5 +1,5 @@
 import { ILoadFacebookUserApi } from '@/data/contracts/apis'
-import { ILoadUserAccountRepository, ICreateFacebookAccountRepository, IUpdateFacebookAccountRepository } from '@/data/contracts/repositories'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@/data/contracts/repositories'
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/use-cases'
 
@@ -9,7 +9,7 @@ import { FacebookAuthentication } from '@/domain/use-cases'
 export class FacebookAuthentcationUseCase {
   constructor(
     private readonly facebookApi: ILoadFacebookUserApi,
-    private readonly userAccountRepository: ILoadUserAccountRepository & ICreateFacebookAccountRepository & IUpdateFacebookAccountRepository
+    private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository
   ) { }
 
   async perform(params: FacebookAuthentication.Params): Promise<AuthenticationError> {
@@ -18,17 +18,13 @@ export class FacebookAuthentcationUseCase {
     if (facebookData !== undefined) {
       const accountData = await this.userAccountRepository.load({ email: facebookData.email })
 
-      if (accountData?.name !== undefined) {
-        await this.userAccountRepository.updateWithFacebook({
-          id: accountData.id,
-          name: accountData.name ?? facebookData.name,
-          facebookId: facebookData.facebookId
-        })
-      } else {
-        await this.userAccountRepository.createFromFacebook(facebookData)
-      }
+      await this.userAccountRepository.saveWithFacebook({
+        id: accountData?.id,
+        name: accountData.name ?? facebookData.name,
+        email: facebookData.email,
+        facebookId: facebookData.facebookId
+      })
     }
-
     return new AuthenticationError()
   }
 }
