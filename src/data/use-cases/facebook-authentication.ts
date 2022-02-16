@@ -3,6 +3,7 @@ import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@/da
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/use-cases'
 import { FacebookAccount } from '@/domain/models'
+import { ITokenGenerator } from '../contracts/crypto'
 
 // #################################################################################
 // INTERSECTION TYPES
@@ -10,7 +11,8 @@ import { FacebookAccount } from '@/domain/models'
 export class FacebookAuthentcationUseCase {
   constructor(
     private readonly facebookApi: ILoadFacebookUserApi,
-    private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository
+    private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository,
+    private readonly crypto: ITokenGenerator
   ) { }
 
   async perform(params: FacebookAuthentication.Params): Promise<AuthenticationError> {
@@ -21,7 +23,8 @@ export class FacebookAuthentcationUseCase {
 
       const facebookAccount = new FacebookAccount(facebookData, accountData)
 
-      await this.userAccountRepository.saveWithFacebook(facebookAccount)
+      const { id } = await this.userAccountRepository.saveWithFacebook(facebookAccount)
+      await this.crypto.generateToken({ key: id })
 
       // =============================================================
       // await this.userAccountRepository.saveWithFacebook({

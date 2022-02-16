@@ -14,7 +14,7 @@ export namespace NLoadUserAccountRepository {
 }
 // ----------------------------------------------------------------------------------------
 export interface ISaveFacebookAccountRepository {
-  saveWithFacebook: (params: NSaveFacebookAccountRepository.Params) => Promise<void>
+  saveWithFacebook: (params: NSaveFacebookAccountRepository.Params) => Promise<NSaveFacebookAccountRepository.Result>
 
 }
 export namespace NSaveFacebookAccountRepository {
@@ -23,6 +23,9 @@ export namespace NSaveFacebookAccountRepository {
     email: string
     name: string
     facebookId: string
+  }
+  export type Result = {
+    id: string
   }
 }
 
