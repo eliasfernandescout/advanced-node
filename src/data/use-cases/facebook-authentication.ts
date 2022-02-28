@@ -2,7 +2,7 @@ import { ILoadFacebookUserApi } from '@/data/contracts/apis'
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@/data/contracts/repositories'
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthentication } from '@/domain/use-cases'
-import { FacebookAccount } from '@/domain/models'
+import { AccessToken, FacebookAccount } from '@/domain/models'
 import { ITokenGenerator } from '../contracts/crypto'
 
 // #################################################################################
@@ -24,7 +24,7 @@ export class FacebookAuthentcationUseCase {
       const facebookAccount = new FacebookAccount(facebookData, accountData)
 
       const { id } = await this.userAccountRepository.saveWithFacebook(facebookAccount)
-      await this.crypto.generateToken({ key: id })
+      await this.crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
 
       // =============================================================
       // await this.userAccountRepository.saveWithFacebook({
