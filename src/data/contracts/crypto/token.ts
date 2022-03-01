@@ -1,5 +1,5 @@
 export interface ITokenGenerator {
-  generateToken: (params: NTokenGenerator.Params) => Promise<void>
+  generateToken: (params: NTokenGenerator.Params) => Promise<NTokenGenerator.Result>
 }
 
 export namespace NTokenGenerator {
@@ -7,4 +7,6 @@ export namespace NTokenGenerator {
     key: string
     expirationInMs: number
   }
+
+  export type Result = string
 }

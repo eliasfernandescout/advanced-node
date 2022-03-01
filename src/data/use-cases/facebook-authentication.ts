@@ -1,21 +1,21 @@
 import { ILoadFacebookUserApi } from '@/data/contracts/apis'
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@/data/contracts/repositories'
 import { AuthenticationError } from '@/domain/errors'
-import { FacebookAuthentication } from '@/domain/use-cases'
+import { IFacebookAuthentication, NFacebookAuthentication } from '@/domain/use-cases'
 import { AccessToken, FacebookAccount } from '@/domain/models'
 import { ITokenGenerator } from '../contracts/crypto'
 
 // #################################################################################
 // INTERSECTION TYPES
 // -------> OUTRO METODO DE ESCREVER O CODIGO ACIMA
-export class FacebookAuthentcationUseCase {
+export class FacebookAuthentcationUseCase implements IFacebookAuthentication {
   constructor(
     private readonly facebookApi: ILoadFacebookUserApi,
     private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository,
     private readonly crypto: ITokenGenerator
   ) { }
 
-  async perform(params: FacebookAuthentication.Params): Promise<AuthenticationError> {
+  async auth(params: NFacebookAuthentication.Params): Promise<NFacebookAuthentication.Result> {
     const facebookData = await this.facebookApi.loadUser(params)
 
     if (facebookData !== undefined) {
@@ -24,7 +24,8 @@ export class FacebookAuthentcationUseCase {
       const facebookAccount = new FacebookAccount(facebookData, accountData)
 
       const { id } = await this.userAccountRepository.saveWithFacebook(facebookAccount)
-      await this.crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
+      const token = await this.crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
+      return new AccessToken(token)
 
       // =============================================================
       // await this.userAccountRepository.saveWithFacebook({
